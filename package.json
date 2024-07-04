@@ -9,6 +9,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.8.3",
+		"@types/chrome": "^0.0.268",
 		"typescript": "^5.2.2",
 		"vite": "^5.3.1"
 	}
