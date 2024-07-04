@@ -1,11 +1,11 @@
 import { get } from "../api/api-helpers";
-import { GET_MODELS } from "../api/url-contstant";
+import { getModelsConfigApiUrl } from "../api/url-helpers";
 import { onNetworkResponseCompleted } from "../extension/network";
 import type { ModelConfig, ModelConfigResponse } from "../types/models-config";
 
 export async function getModelsConfig(): Promise<ModelConfig[]> {
-	const getModelsRequest = await onNetworkResponseCompleted(GET_MODELS);
-
+	const url = await getModelsConfigApiUrl();
+	const getModelsRequest = await onNetworkResponseCompleted(url);
 	const modelsConfig = await get<ModelConfigResponse[]>(getModelsRequest.url);
 
 	return modelsConfig.map((modelConfig) => ({

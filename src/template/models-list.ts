@@ -1,17 +1,20 @@
-import { GET_MODEL } from "../api/url-contstant";
+import { getModelsConfig } from "../network-listeners/model-network-listeners";
 import type { ModelConfig } from "../types/models-config";
 import { ModelItem } from "./model-item";
-import { ModelViewer } from "./model-viewer";
 
 export class ModelsListTemplate {
-	private readonly modelsConfig: ModelConfig[] = [];
+	private modelsConfig: ModelConfig[] = [];
 
 	private container: HTMLDivElement | null = null;
 
 	private appContainer: HTMLElement | null = null;
 
-	constructor(modelsConfig: ModelConfig[]) {
-		this.modelsConfig = modelsConfig;
+	constructor() {
+		this.initialise();
+	}
+
+	private async initialise() {
+		this.modelsConfig = await getModelsConfig();
 		this.getApp();
 		this.createContainer();
 		this.createItems();
@@ -32,9 +35,5 @@ export class ModelsListTemplate {
 				new ModelItem(modelConfig, this.container);
 			}
 		});
-
-		if (this.container) {
-			new ModelViewer(this.container, GET_MODEL);
-		}
 	}
 }

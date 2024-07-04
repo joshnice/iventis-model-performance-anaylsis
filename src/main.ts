@@ -1,9 +1,10 @@
-import { getModelsConfig } from "./network-listeners/model-network-listeners";
 import { ModelsListTemplate } from "./template/models-list";
 import { RefreshMessage } from "./template/refresh-message";
 import "./style.css";
 import { sendMessage } from "./extension/messages";
 import { PAGE_ALREADY_LOADED } from "./extension/message-constants";
+import { isPageIventis } from "./api/url-helpers";
+import { InvalidSite } from "./template/invalid-site";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -12,21 +13,23 @@ if (app == null) {
 }
 
 async function main() {
-	sendMessage({ id: PAGE_ALREADY_LOADED, callback: refreshMessage });
+	const iventis = await isPageIventis();
 
-	await getModels();
-}
+	if (!iventis) {
+		const invalidSiteMessage = new InvalidSite();
+		invalidSiteMessage.showInvalidSiteMessage();
+		return;
+	}
 
-function refreshMessage(showMessage: boolean) {
-	if (showMessage) {
+	const isPageLoaded = await sendMessage(PAGE_ALREADY_LOADED);
+
+	if (isPageLoaded) {
 		const refreshMessage = new RefreshMessage();
 		refreshMessage.showRefreshMessage();
+		return;
 	}
-}
 
-async function getModels() {
-	const modelsConfig = await getModelsConfig();
-	new ModelsListTemplate(modelsConfig);
+	new ModelsListTemplate();
 }
 
 window.onload = () => {

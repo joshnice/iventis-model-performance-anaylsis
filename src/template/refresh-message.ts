@@ -1,7 +1,9 @@
+import { ModelsListTemplate } from "./models-list";
+
 export class RefreshMessage {
 	private readonly container: HTMLElement | null;
 
-	private readonly containerId = "help-container";
+	private readonly containerId = "refresh-message-container";
 
 	constructor() {
 		this.container = document.getElementById("app");
@@ -24,6 +26,7 @@ export class RefreshMessage {
 		refreshButton.onclick = () => {
 			chrome.tabs.reload();
 			this.removeRefreshMessage();
+			new ModelsListTemplate();
 		};
 		messageContainer.appendChild(refreshButton);
 

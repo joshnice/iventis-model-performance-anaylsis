@@ -1,11 +1,15 @@
 import { getCurrentTab } from "./tabs";
 
-export async function sendMessage<T>(message: { id: string; callback: (response: T) => void }) {
+export async function sendMessage<T>(messageId: string) {
 	const tab = await getCurrentTab();
 
-	if (tab.id == null) {
-		throw new Error("Tab id is null");
-	}
+	return new Promise<T>((resolve) => {
+		if (tab.id == null) {
+			throw new Error("Tab id is null");
+		}
 
-	chrome.tabs.sendMessage(tab.id, message.id, message.callback);
+		chrome.tabs.sendMessage(tab.id, messageId, (res) => {
+			resolve(res);
+		});
+	});
 }
