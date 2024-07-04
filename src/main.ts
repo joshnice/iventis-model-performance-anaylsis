@@ -1,7 +1,5 @@
-import { get } from "./api/api-helpers";
-import { GET_MODELS } from "./api/url-contstant";
-import { onNetworkResponseCompleted } from "./extension/network";
-import { getCurrentTab } from "./extension/tabs";
+import { getModelsConfig } from "./network-listeners/model-network-listeners";
+import { ModelsListTemplate } from "./template/models-list";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -16,20 +14,12 @@ app.innerHTML = `
 `;
 
 async function main() {
-	const tab = await getCurrentTab();
-	console.log("tab", tab);
-	const response = await onNetworkResponseCompleted(GET_MODELS);
-	console.log("response", response);
-	const data = await get(response.url);
-	console.log("data", data);
+	getModels();
+}
 
-	const content = document.getElementById("content");
-
-	console.log("content", content);
-
-	if (content) {
-		content.innerHTML = JSON.stringify(data);
-	}
+async function getModels() {
+	const modelsConfig = await getModelsConfig();
+	new ModelsListTemplate(modelsConfig);
 }
 
 main();
