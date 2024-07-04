@@ -1,8 +1,9 @@
 import { getModelsConfig } from "./network-listeners/model-network-listeners";
 import { ModelsListTemplate } from "./template/models-list";
-import { getCurrentTab } from "./extension/tabs";
 import { RefreshMessage } from "./template/refresh-message";
 import "./style.css";
+import { sendMessage } from "./extension/messages";
+import { PAGE_ALREADY_LOADED } from "./extension/message-constants";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -11,21 +12,16 @@ if (app == null) {
 }
 
 async function main() {
-	const tab = await getCurrentTab();
-
-	const help = new RefreshMessage();
-
-	if (tab.id == null) {
-		throw new Error("Tab id is null");
-	}
-
-	chrome.tabs.sendMessage(tab.id, "is-page-loaded", (response) => {
-		if (response) {
-			help.showRefreshMessage();
-		}
-	});
+	sendMessage({ id: PAGE_ALREADY_LOADED, callback: refreshMessage });
 
 	await getModels();
+}
+
+function refreshMessage(showMessage: boolean) {
+	if (showMessage) {
+		const refreshMessage = new RefreshMessage();
+		refreshMessage.showRefreshMessage();
+	}
 }
 
 async function getModels() {
