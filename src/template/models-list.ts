@@ -1,5 +1,7 @@
+import { GET_MODEL } from "../api/url-contstant";
 import type { ModelConfig } from "../types/models-config";
 import { ModelItem } from "./model-item";
+import { ModelViewer } from "./model-viewer";
 
 export class ModelsListTemplate {
 	private readonly modelsConfig: ModelConfig[] = [];
@@ -30,5 +32,9 @@ export class ModelsListTemplate {
 				new ModelItem(modelConfig, this.container);
 			}
 		});
+
+		if (this.container) {
+			new ModelViewer(this.container, GET_MODEL);
+		}
 	}
 }
