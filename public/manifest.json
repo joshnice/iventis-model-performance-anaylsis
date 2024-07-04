@@ -6,6 +6,15 @@
 	"action": {
 		"default_popup": "index.html"
 	},
-	"permissions": ["activeTab", "webRequest"],
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content-script.js"]
+		}
+	],
+	"externally_connectable": {
+		"matches": ["<all_urls>"]
+	},
+	"permissions": ["activeTab", "webRequest", "scripting"],
 	"host_permissions": ["http://*/*", "https://*/*"]
 }
