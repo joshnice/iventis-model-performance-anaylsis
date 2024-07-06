@@ -19,9 +19,12 @@ export class RefreshMessage extends TemplateBase {
 
 		const message = document.createElement("p");
 		message.innerText = "Please refresh the page to see the models";
+		message.id = `${this.elementId}-text`;
 		messageContainer.appendChild(message);
 
+
 		const refreshButton = document.createElement("button");
+		refreshButton.id = `${this.elementId}-button`;
 		refreshButton.innerText = "Refresh";
 		refreshButton.onclick = () => {
 			this.events.onRefreshClicked();
