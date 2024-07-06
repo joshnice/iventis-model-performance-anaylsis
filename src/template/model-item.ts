@@ -1,30 +1,43 @@
 import type { ModelConfig } from "../types/models-config";
+import { TemplateBase } from "./template-base";
 
-export class ModelItem {
+type Events = {
+	onModelSelected: (modelName: string, modelId: string) => void
+}
+
+export class ModelItem extends TemplateBase {
 	private readonly name: string;
 
-	private readonly assetId: string;
+	private readonly modelId: string;
 
-	private readonly container: HTMLDivElement;
+	private readonly listContainer: HTMLDivElement;
 
-	constructor(modelConfig: ModelConfig, listContainer: HTMLDivElement) {
+	private readonly events: Events;
+
+
+	constructor(modelConfig: ModelConfig, listContainer: HTMLDivElement, events: Events) {
+		super("model-item");
 		this.name = modelConfig.name;
-		this.assetId = modelConfig.assetId;
-		this.container = listContainer;
-		this.create();
+		this.modelId = modelConfig.assetId;
+		this.listContainer = listContainer;
+		this.events = events;
+		this.add();
 	}
 
-	private create() {
-		const itemContainer = document.createElement("div");
+	public add() {
+		const itemButton = document.createElement("button");
+		itemButton.style.width = "100px";
+		itemButton.style.height = "40px";
+		itemButton.style.padding = "10px";
+		itemButton.style.cursor = "pointer";
+		itemButton.innerText = this.name;
+		itemButton.id = this.elementId;
 
-		const name = document.createElement("p");
-		name.innerText = this.name;
+		itemButton.onclick = () => {
+			this.events.onModelSelected(this.name, this.modelId)
+		}
 
-		const assetId = document.createElement("p");
-		assetId.innerText = this.assetId;
 
-		itemContainer.appendChild(name);
-		itemContainer.appendChild(assetId);
-		this.container.appendChild(itemContainer);
+		this.listContainer.appendChild(itemButton);
 	}
 }

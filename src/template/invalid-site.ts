@@ -1,25 +1,21 @@
-export class InvalidSite {
-	private readonly container: HTMLElement | null;
+import { TemplateBase } from "./template-base";
 
-	private readonly containerId = "invalid-site-container";
+export class InvalidSite extends TemplateBase {
 
 	constructor() {
-		this.container = document.getElementById("app");
+		super("invalid-site-container");
+		this.add();
 	}
 
-	public showInvalidSiteMessage() {
-		if (this.container == null) {
-			throw new Error("Root of extension has not been found");
-		}
-
+	public add() {
 		const messageContainer = document.createElement("div");
-		messageContainer.id = this.containerId;
+		messageContainer.id = this.elementId;
 
 		const message = document.createElement("p");
 		message.style.width = "200px";
 		message.innerText = "The site you are on is not a valid Iventis site. Please navigate to a valid Iventis site to see the models.";
 		messageContainer.appendChild(message);
 
-		this.container.appendChild(messageContainer);
+		this.appContainer.appendChild(messageContainer);
 	}
 }

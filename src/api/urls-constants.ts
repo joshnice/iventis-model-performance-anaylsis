@@ -1,4 +1,4 @@
-export const APPLICATION_URLS = ["dev.iventis.studio"];
+export const APPLICATION_URLS = ["dev.iventis.studio", "app.iventis"];
 
 export const GET_MODELS_CONFIG = "/mapping/models/*";
 

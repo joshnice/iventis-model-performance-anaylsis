@@ -1,35 +1,41 @@
 import { ModelsListTemplate } from "./template/models-list";
 import { RefreshMessage } from "./template/refresh-message";
-import "./style.css";
 import { sendMessage } from "./extension/messages";
 import { PAGE_ALREADY_LOADED } from "./extension/message-constants";
 import { isPageIventis } from "./api/url-helpers";
 import { InvalidSite } from "./template/invalid-site";
+import type { TemplateBase } from "./template/template-base";
+import "./style.css";
+import { ModelViewer } from "./template/model-viewer";
 
-const app = document.querySelector<HTMLDivElement>("#app");
-
-if (app == null) {
-	throw new Error("Root of extension has not been found");
-}
+let currentView: TemplateBase;
 
 async function main() {
 	const iventis = await isPageIventis();
 
 	if (!iventis) {
-		const invalidSiteMessage = new InvalidSite();
-		invalidSiteMessage.showInvalidSiteMessage();
+		currentView = new InvalidSite();
 		return;
 	}
 
 	const isPageLoaded = await sendMessage(PAGE_ALREADY_LOADED);
 
 	if (isPageLoaded) {
-		const refreshMessage = new RefreshMessage();
-		refreshMessage.showRefreshMessage();
+		currentView = new RefreshMessage({ onRefreshClicked: showModelList });
 		return;
 	}
 
-	new ModelsListTemplate();
+	currentView = new ModelsListTemplate({ onModelSelected: showModel });
+}
+
+function showModel(modelName: string, modelId: string) {
+	currentView.remove();
+	currentView = new ModelViewer(modelName, modelId, { onBackClicked: showModelList });
+}
+
+function showModelList() {
+	currentView.remove();
+	currentView = new ModelsListTemplate({ onModelSelected: showModel });
 }
 
 window.onload = () => {

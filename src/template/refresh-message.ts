@@ -1,21 +1,21 @@
-import { ModelsListTemplate } from "./models-list";
+import { TemplateBase } from "./template-base";
 
-export class RefreshMessage {
-	private readonly container: HTMLElement | null;
+type Events = {
+	onRefreshClicked: () => void;
+}
 
-	private readonly containerId = "refresh-message-container";
+export class RefreshMessage extends TemplateBase {
+	private readonly events: Events;
 
-	constructor() {
-		this.container = document.getElementById("app");
+	constructor(events: Events) {
+		super("refresh-message-container");
+		this.events = events;
+		this.add();
 	}
 
-	public showRefreshMessage() {
-		if (this.container == null) {
-			throw new Error("Root of extension has not been found");
-		}
-
+	public add() {
 		const messageContainer = document.createElement("div");
-		messageContainer.id = this.containerId;
+		messageContainer.id = this.elementId;
 
 		const message = document.createElement("p");
 		message.innerText = "Please refresh the page to see the models";
@@ -24,24 +24,11 @@ export class RefreshMessage {
 		const refreshButton = document.createElement("button");
 		refreshButton.innerText = "Refresh";
 		refreshButton.onclick = () => {
+			this.events.onRefreshClicked();
 			chrome.tabs.reload();
-			this.removeRefreshMessage();
-			new ModelsListTemplate();
 		};
+
 		messageContainer.appendChild(refreshButton);
-
-		this.container.appendChild(messageContainer);
-	}
-
-	public removeRefreshMessage() {
-		if (this.container == null) {
-			throw new Error("Root of extension has not been found");
-		}
-
-		const messageContainer = this.container.querySelector(`#${this.containerId}`);
-
-		if (messageContainer != null) {
-			this.container.removeChild(messageContainer);
-		}
+		this.appContainer.appendChild(messageContainer);
 	}
 }
