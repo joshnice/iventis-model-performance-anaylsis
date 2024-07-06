@@ -1,5 +1,5 @@
 import { getCurrentTab } from "../extension/tabs";
-import { APPLICATION_URLS, GET_MODELS_CONFIG } from "./urls-constants";
+import { APPLICATION_URLS, DEV_URL, GET_MODELS_CONFIG, GET_MODEL_APP, GET_MODEL_DEV } from "./urls-constants";
 
 export async function isPageIventis() {
 	const tab = await getCurrentTab();
@@ -20,4 +20,10 @@ export async function getApiUrl() {
 export async function getModelsConfigApiUrl() {
 	const apiUrl = await getApiUrl();
 	return `${apiUrl}${GET_MODELS_CONFIG}`;
+}
+
+export async function getModelApiUrl() {
+	const tab = await getCurrentTab();
+	const isDev = tab.url?.includes(DEV_URL);
+	return isDev ? GET_MODEL_DEV : GET_MODEL_APP;
 }

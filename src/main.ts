@@ -7,6 +7,7 @@ import { InvalidSite } from "./template/invalid-site";
 import type { TemplateBase } from "./template/template-base";
 import { ModelViewer } from "./template/model-viewer";
 import "./style.css";
+import { getModelListener } from "./network-listeners/model-network-listeners";
 
 let currentView: TemplateBase;
 
@@ -17,6 +18,8 @@ async function main() {
 		currentView = new InvalidSite();
 		return;
 	}
+
+	getModelListener();
 
 	const isPageLoaded = await sendMessage(PAGE_ALREADY_LOADED);
 
