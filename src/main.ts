@@ -5,8 +5,8 @@ import { PAGE_ALREADY_LOADED } from "./extension/message-constants";
 import { isPageIventis } from "./api/url-helpers";
 import { InvalidSite } from "./template/invalid-site";
 import type { TemplateBase } from "./template/template-base";
-import "./style.css";
 import { ModelViewer } from "./template/model-viewer";
+import "./style.css";
 
 let currentView: TemplateBase;
 
