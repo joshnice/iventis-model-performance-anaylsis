@@ -4,17 +4,31 @@
 	"description": "Base Level Extension",
 	"version": "1.0",
 	"action": {
-		"default_popup": "index.html"
+		"default_popup": "index.html",
+		"default_icon": "iventis.png"
 	},
 	"content_scripts": [
 		{
-			"matches": ["<all_urls>"],
-			"js": ["content-script.js"]
+			"matches": [
+				"<all_urls>"
+			],
+			"js": [
+				"content-script.js"
+			]
 		}
 	],
 	"externally_connectable": {
-		"matches": ["<all_urls>"]
+		"matches": [
+			"<all_urls>"
+		]
 	},
-	"permissions": ["activeTab", "webRequest", "scripting"],
-	"host_permissions": ["http://*/*", "https://*/*"]
+	"permissions": [
+		"activeTab",
+		"webRequest",
+		"scripting"
+	],
+	"host_permissions": [
+		"http://*/*",
+		"https://*/*"
+	]
 }
