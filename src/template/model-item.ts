@@ -1,5 +1,6 @@
 import type { ModelConfig } from "../types/models-config";
 import { TemplateBase } from "./template-base";
+import "./model-item.css";
 
 type Events = {
 	onModelSelected: (modelName: string, modelId: string) => void
@@ -26,10 +27,7 @@ export class ModelItem extends TemplateBase {
 
 	public add() {
 		const itemButton = document.createElement("button");
-		itemButton.style.width = "100px";
-		itemButton.style.height = "40px";
-		itemButton.style.padding = "10px";
-		itemButton.style.cursor = "pointer";
+
 		itemButton.innerText = this.name;
 		itemButton.id = this.elementId;
 

@@ -2,6 +2,7 @@ import { getModelsConfig } from "../network-listeners/model-network-listeners";
 import { TemplateBase } from "./template-base";
 import { ModelItem } from "./model-item";
 import type { ModelConfig } from "../types/models-config";
+import "./models-list.css";
 
 export class ModelsListTemplate extends TemplateBase {
 
@@ -24,9 +25,6 @@ export class ModelsListTemplate extends TemplateBase {
 
 	private createContainer() {
 		this.container = document.createElement("div");
-		this.container.style.display = "flex";
-		this.container.style.flexDirection = "column";
-		this.container.style.gap = "10px";
 		this.container.id = this.elementId;
 		this.appContainer.appendChild(this.container);
 	}
