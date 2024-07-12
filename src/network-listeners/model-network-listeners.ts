@@ -1,6 +1,7 @@
 import { get } from "../api/api-helpers";
 import { getModelApiUrl, getModelsConfigApiUrl } from "../api/url-helpers";
 import { onNetworkResponseCompleted } from "../extension/network";
+import { BehaviorSubject } from "rxjs";
 import type { ModelConfig, ModelConfigResponse } from "../types/models-config";
 
 let getModelsRequestResponse: chrome.webRequest.WebResponseCacheDetails;
@@ -18,7 +19,7 @@ export async function getModelsConfig(): Promise<ModelConfig[]> {
 	}));
 }
 
-export const modelIdWithUrl: Record<string, string> = {};
+export const $models = new BehaviorSubject<Record<string, string>>({});
 
 export async function getModelListener() {
 	const url = await getModelApiUrl();
@@ -27,7 +28,7 @@ export async function getModelListener() {
 			const modelUrl = event.url.split("?");
 			const modelId = modelUrl[0].split("/").pop();
 			if (modelId != null && event.url != null) {
-				modelIdWithUrl[modelId] = event.url;
+				$models.next({ ...$models.value, [modelId]: event.url })
 			}
 		},
 		{

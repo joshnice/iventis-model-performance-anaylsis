@@ -1,7 +1,7 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, AmbientLight, DirectionalLight } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { TemplateBase } from "./template-base";
-import { modelIdWithUrl } from "../network-listeners/model-network-listeners";
+import { $models } from "../network-listeners/model-network-listeners";
 
 type Events = {
 	onBackClicked: () => void;
@@ -25,6 +25,9 @@ export class ModelViewer extends TemplateBase {
 
 	private stats: { calls: number, lines: number, points: number, triangles: number, geometries: number, textures: number } | null = null;
 
+	private showingModel = false;
+
+
 	constructor(modelName: string, modelId: string, events: Events) {
 		super("model-viewer");
 		this.modelName = modelName;
@@ -37,7 +40,15 @@ export class ModelViewer extends TemplateBase {
 		this.addContainer();
 		this.addHeader();
 		this.addModelAndStatsContainer();
-		this.addModel(modelIdWithUrl[this.modelId]);
+
+		$models.subscribe((models) => {
+			const modelUrl = models[this.modelId];
+			if (modelUrl != null && !this.showingModel) {
+				this.addModel(modelUrl);
+				this.showingModel = true;
+			}
+		});
+
 		this.appContainer.appendChild(this.getContainer());
 	}
 
