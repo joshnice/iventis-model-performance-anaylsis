@@ -1,7 +1,8 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, AmbientLight, DirectionalLight } from "three";
+import { Scene, PerspectiveCamera, WebGLRenderer, AmbientLight, DirectionalLight, Color } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { TemplateBase } from "./template-base";
 import { $models } from "../network-listeners/model-network-listeners";
+import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 type Events = {
 	onBackClicked: () => void;
@@ -112,16 +113,26 @@ export class ModelViewer extends TemplateBase {
 		const scene = new Scene();
 		const camera = new PerspectiveCamera(75, this.previewWidth / this.previewHeight, 0.1, 1000);
 
-		const ambientLight = new AmbientLight(0xffffff, 0.4);
-		scene.add(ambientLight);
+		scene.background = new Color(0xcccccc);
 
-		const dirLight = new DirectionalLight(0xefefff, 1.5);
-		dirLight.position.set(10, 10, 10);
-		scene.add(dirLight);
+		const dirLight1 = new DirectionalLight(0xffffff, 3);
+		dirLight1.position.set(1, 1, 1);
+		scene.add(dirLight1);
+
+		const dirLight2 = new DirectionalLight(0x002288, 3);
+		dirLight2.position.set(- 1, - 1, - 1);
+		scene.add(dirLight2);
+
+		const ambientLight = new AmbientLight(0x555555);
+		scene.add(ambientLight);
 
 		const loader = new GLTFLoader();
 
 		const renderer = new WebGLRenderer();
+
+		const controls = new OrbitControls(camera, renderer.domElement);
+		controls.listenToKeyEvents(window); // optional
+
 		renderer.setSize(this.previewWidth, this.previewHeight);
 		renderer.setAnimationLoop(() => {
 			renderer.render(scene, camera);
