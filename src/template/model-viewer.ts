@@ -30,11 +30,13 @@ export class ModelViewer extends TemplateBase {
 
 	private previewHeight = 300;
 
-	private stats: { calls: number, triangles: number, geometries: number, textures: number, meshes: number, performance: ModelPerformance } | null = null;
+	private stats: { calls: number, triangles: number, geometries: number, textures: number, meshes: number, performance: ModelPerformance, size: string } | null = null;
 
 	private showingModel = false;
 
 	private modelUrl: string | null = null;
+
+	private modelSize: string | null = null;
 
 	constructor(modelName: string, modelId: string, events: Events) {
 		super("model-viewer");
@@ -149,6 +151,7 @@ export class ModelViewer extends TemplateBase {
 			}
 			statsContainer.appendChild(element);
 		});
+
 		this.getModelAndStatsContainer().appendChild(statsContainer);
 	}
 
@@ -214,6 +217,7 @@ export class ModelViewer extends TemplateBase {
 					triangles,
 					meshes: numberOfMeshes,
 					performance: this.getPeformanceValue({ drawcalls: calls, geometries, triangles }),
+					size: this.modelSize ?? ""
 				}
 				this.addStats();
 				this.addButtons();
@@ -227,6 +231,13 @@ export class ModelViewer extends TemplateBase {
 		loader.load(
 			url,
 			(gltf) => {
+				const uint8Array = gltf.parser.extensions.KHR_binary_glTF.body;
+				const sizeInMB = uint8Array.byteLength / 1048576;
+				if (sizeInMB < 1) {
+					this.modelSize = `${(sizeInMB * 1024).toFixed(0)} KB`
+				} else {
+					this.modelSize = `${sizeInMB.toFixed(2)} MB`;
+				}
 				scene.add(gltf.scene);
 				gltf.animations; // Array<THREE.AnimationClip>
 				gltf.scene; // THREE.Group
