@@ -9,6 +9,10 @@ body {
     border-radius: 4px;
 }
 
+h1,h2,h3,h4,h5,h6 {
+    margin: 0px;
+}
+
 button {
     background-color: transparent;
     border: 2px solid white;
@@ -58,22 +62,6 @@ button:hover {
 
 #refresh-message-container-button {
     padding: 10px;
-    height: 44px;
-    width: 100px;
-}
-
-#model-viewer {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-} 
-
-#model-viewer-model-stats-container {
-    display: flex;
-    gap: 10px;
-}
-
-#model-viewer-back-button {
     height: 44px;
     width: 100px;
 }

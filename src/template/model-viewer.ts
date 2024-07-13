@@ -3,9 +3,11 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { TemplateBase } from "./template-base";
 import { $models } from "../network-listeners/model-network-listeners";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
+import "./model-viewer.css";
 
 type Events = {
 	onBackClicked: () => void;
+	onDownloadClicked: (modelUrl: string) => void;
 }
 
 export class ModelViewer extends TemplateBase {
@@ -20,6 +22,8 @@ export class ModelViewer extends TemplateBase {
 
 	private modelAndStatsContainer: HTMLDivElement | null = null;
 
+	private buttonsContainer: HTMLDivElement | null = null;
+
 	private previewWidth = 300;
 
 	private previewHeight = 300;
@@ -28,6 +32,7 @@ export class ModelViewer extends TemplateBase {
 
 	private showingModel = false;
 
+	private modelUrl: string | null = null;
 
 	constructor(modelName: string, modelId: string, events: Events) {
 		super("model-viewer");
@@ -47,6 +52,7 @@ export class ModelViewer extends TemplateBase {
 			if (modelUrl != null && !this.showingModel) {
 				this.addModel(modelUrl);
 				this.showingModel = true;
+				this.modelUrl = modelUrl;
 			}
 		});
 
@@ -63,6 +69,13 @@ export class ModelViewer extends TemplateBase {
 			throw new Error("Container is null");
 		}
 		return this.container;
+	}
+
+	private getButtonsContainer() {
+		if (this.buttonsContainer == null) {
+			throw new Error("Container is null");
+		}
+		return this.buttonsContainer;
 	}
 
 	private addModelAndStatsContainer() {
@@ -85,12 +98,37 @@ export class ModelViewer extends TemplateBase {
 		this.getContainer().appendChild(header);
 	}
 
+	private addButtons() {
+		this.buttonsContainer = document.createElement("div");
+		this.buttonsContainer.id = `${this.elementId}-button-container`;
+		this.addBackButton();
+		this.addDownloadButton()
+		this.getContainer().appendChild(this.buttonsContainer);
+	}
+
 	private addBackButton() {
 		const backButton = document.createElement("button");
 		backButton.id = `${this.elementId}-back-button`;
 		backButton.innerText = "Back";
 		backButton.onclick = this.events.onBackClicked;
-		this.getContainer().appendChild(backButton);
+		this.getButtonsContainer().appendChild(backButton);
+	}
+
+	private addDownloadButton() {
+		const downloadButton = document.createElement("button");
+		downloadButton.id = `${this.elementId}-download-button`;
+		downloadButton.innerText = "Download";
+		downloadButton.onclick = () => {
+			if (this.modelUrl) {
+				this.events.onDownloadClicked(this.modelUrl)
+			}
+			// Disable for two seconds incase user clicks it twice
+			downloadButton.disabled = true;
+			setTimeout(() => {
+				downloadButton.disabled = false;
+			}, 2000);
+		};
+		this.getButtonsContainer().appendChild(downloadButton);
 	}
 
 	private addStats() {
@@ -147,7 +185,7 @@ export class ModelViewer extends TemplateBase {
 					triangles: info.render.triangles,
 				}
 				this.addStats();
-				this.addBackButton();
+				this.addButtons();
 			}
 
 		});

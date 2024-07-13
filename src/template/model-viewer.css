@@ -1,0 +1,22 @@
+#model-viewer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+} 
+
+#model-viewer-model-stats-container {
+    display: flex;
+    gap: 10px;
+}
+
+#model-viewer-back-button {
+    height: 44px;
+    width: 100px;
+}
+
+#model-viewer-button-container {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+}

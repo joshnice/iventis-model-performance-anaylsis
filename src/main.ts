@@ -33,12 +33,16 @@ async function main() {
 
 function showModel(modelName: string, modelId: string) {
 	currentView.remove();
-	currentView = new ModelViewer(modelName, modelId, { onBackClicked: showModelList });
+	currentView = new ModelViewer(modelName, modelId, { onBackClicked: showModelList, onDownloadClicked });
 }
 
 function showModelList() {
 	currentView.remove();
 	currentView = new ModelsListTemplate({ onModelSelected: showModel });
+}
+
+function onDownloadClicked(modelUrl: string) {
+	window.location.assign(modelUrl);
 }
 
 window.onload = () => {
