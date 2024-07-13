@@ -10,6 +10,8 @@ type Events = {
 	onDownloadClicked: (modelUrl: string) => void;
 }
 
+type ModelPerformance = "good" | "average" | "bad";
+
 export class ModelViewer extends TemplateBase {
 
 	private readonly modelName: string;
@@ -28,7 +30,7 @@ export class ModelViewer extends TemplateBase {
 
 	private previewHeight = 300;
 
-	private stats: { calls: number, lines: number, points: number, triangles: number, geometries: number, textures: number } | null = null;
+	private stats: { calls: number, triangles: number, geometries: number, textures: number, meshes: number, performance: ModelPerformance } | null = null;
 
 	private showingModel = false;
 
@@ -142,9 +144,28 @@ export class ModelViewer extends TemplateBase {
 		Object.entries(this.stats).forEach(([name, value]) => {
 			const element = document.createElement("p");
 			element.innerText = `${name} = ${value}`;
+			if (name === "performance" && typeof value === "string") {
+				element.className = value;
+			}
 			statsContainer.appendChild(element);
 		});
 		this.getModelAndStatsContainer().appendChild(statsContainer);
+	}
+
+	private getPeformanceValue(stats: { drawcalls: number, geometries: number, triangles: number }): ModelPerformance {
+		// Todo: Add more performance stat checks
+		return this.getDrawCallPerformanceValue(stats.drawcalls);
+	}
+
+	private getDrawCallPerformanceValue(drawcalls: number): ModelPerformance {
+		if (drawcalls > 200) {
+			return "bad";
+		}
+		if (drawcalls > 75) {
+			return "average";
+		}
+		return "good";
+
 	}
 
 	private addModel(url: string) {
@@ -176,13 +197,23 @@ export class ModelViewer extends TemplateBase {
 			renderer.render(scene, camera);
 			const { info } = renderer;
 			if (this.stats == null && info.render.calls !== 0) {
+				const { calls, triangles } = info.render;
+				const { textures, geometries } = info.memory;
+				let numberOfMeshes = 0;
+				scene.traverse((o) => {
+					// @ts-ignore
+					if (o.isMesh) {
+						numberOfMeshes += 1;
+					}
+				});
+
 				this.stats = {
-					calls: info.render.calls,
-					geometries: info.memory.geometries,
-					textures: info.memory.textures,
-					lines: info.render.lines,
-					points: info.render.points,
-					triangles: info.render.triangles,
+					calls,
+					geometries,
+					textures,
+					triangles,
+					meshes: numberOfMeshes,
+					performance: this.getPeformanceValue({ drawcalls: calls, geometries, triangles }),
 				}
 				this.addStats();
 				this.addButtons();

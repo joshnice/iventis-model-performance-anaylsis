@@ -20,3 +20,15 @@
     display: flex;
     gap: 20px;
 }
+
+.bad{
+    color: red;
+}
+
+.average{
+    color: orange;
+}
+
+.good {
+    color: green;
+}
