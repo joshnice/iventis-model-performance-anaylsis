@@ -2,6 +2,8 @@ export const DEV_URL = "dev.iventis.studio";
 
 export const APP_URL = "app.iventis";
 
+export const MAP_URL = "spatial-planner/map";
+
 export const APPLICATION_URLS = [DEV_URL, APP_URL];
 
 export const GET_MODELS_CONFIG = "/mapping/models/*";

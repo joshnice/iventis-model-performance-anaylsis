@@ -2,7 +2,7 @@ import { ModelsListTemplate } from "./template/models-list";
 import { RefreshMessage } from "./template/refresh-message";
 import { sendMessage } from "./extension/messages";
 import { PAGE_ALREADY_LOADED } from "./extension/message-constants";
-import { isPageIventis } from "./api/url-helpers";
+import { isIvenitsPageMap, isPageIventis } from "./api/url-helpers";
 import { InvalidSite } from "./template/invalid-site";
 import type { TemplateBase } from "./template/template-base";
 import { ModelViewer } from "./template/model-viewer";
@@ -15,9 +15,17 @@ async function main() {
 	const iventis = await isPageIventis();
 
 	if (!iventis) {
-		currentView = new InvalidSite();
+		currentView = new InvalidSite("site");
 		return;
 	}
+
+	const map = await isIvenitsPageMap();
+
+	if (!map) {
+		currentView = new InvalidSite("map");
+		return;
+	}
+
 
 	getModelListener();
 

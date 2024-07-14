@@ -1,9 +1,14 @@
 import { getCurrentTab } from "../extension/tabs";
-import { APPLICATION_URLS, DEV_URL, GET_MODELS_CONFIG, GET_MODEL_APP, GET_MODEL_DEV } from "./urls-constants";
+import { APPLICATION_URLS, DEV_URL, GET_MODELS_CONFIG, GET_MODEL_APP, GET_MODEL_DEV, MAP_URL } from "./urls-constants";
 
 export async function isPageIventis() {
 	const tab = await getCurrentTab();
 	return tab.url != null && APPLICATION_URLS.some((url) => tab.url?.includes(url));
+}
+
+export async function isIvenitsPageMap() {
+	const tab = await getCurrentTab();
+	return tab.url?.includes(MAP_URL);
 }
 
 export async function getApiUrl() {
