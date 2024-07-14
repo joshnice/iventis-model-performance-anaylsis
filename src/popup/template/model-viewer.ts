@@ -7,7 +7,7 @@ import "./model-viewer.css";
 
 type Events = {
 	onBackClicked: () => void;
-	onDownloadClicked: (modelUrl: string) => void;
+	onDownloadClicked: (modelUrl: string, modelName: string) => void;
 }
 
 type ModelPerformance = "good" | "average" | "bad";
@@ -124,7 +124,7 @@ export class ModelViewer extends TemplateBase {
 		downloadButton.innerText = "Download";
 		downloadButton.onclick = () => {
 			if (this.modelUrl) {
-				this.events.onDownloadClicked(this.modelUrl)
+				this.events.onDownloadClicked(this.modelUrl, this.modelName)
 			}
 			// Disable for two seconds incase user clicks it twice
 			downloadButton.disabled = true;

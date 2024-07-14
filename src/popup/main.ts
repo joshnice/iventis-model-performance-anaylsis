@@ -49,8 +49,14 @@ function showModelList() {
 	currentView = new ModelsListTemplate({ onModelSelected: showModel });
 }
 
-function onDownloadClicked(modelUrl: string) {
-	window.location.assign(modelUrl);
+async function onDownloadClicked(modelUrl: string, modelName: string) {
+	const modelFetchResponse = await fetch(modelUrl);
+	const model = await modelFetchResponse.blob();
+	const url = window.URL.createObjectURL(model);
+	const anchor = document.createElement("a");
+	anchor.href = url;
+	anchor.download = `${modelName}.glb`;
+	anchor.click();
 }
 
 window.onload = () => {
