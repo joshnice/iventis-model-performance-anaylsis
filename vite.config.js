@@ -5,11 +5,17 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				app: "./index.html",
-				"content-script": "./src/content-scripts/content-scripts.ts",
+				"content-script": "./src/content-script/content-script.ts",
 			},
 			output: {
 				entryFileNames: (assetInfo) => {
-					return assetInfo.name === "content-script" ? "[name].js" : "assets/js/[name]-[hash].js";
+					const { name } = assetInfo;
+					switch (name) {
+						case "content-script":
+							return "[name].js";
+						default:
+							return "assets/js/[name]-[hash].js";
+					}
 				},
 			},
 		},

@@ -4,3 +4,4 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
 		sendResponse(element != null);
 	}
 });
+
