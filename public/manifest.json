@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
-	"name": "Iventis Model Performance Analysis",
-	"description": "Base Level Extension",
+	"name": "Iventis Model Analysis",
+	"description": "An analysis tool to investigate performance of glb models used inside Iventis mapping applications",
 	"version": "1.0",
 	"action": {
 		"default_popup": "index.html",
