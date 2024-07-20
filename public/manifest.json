@@ -24,8 +24,7 @@
 	},
 	"permissions": [
 		"activeTab",
-		"webRequest",
-		"scripting"
+		"webRequest"
 	],
 	"host_permissions": [
 		"http://*/*",
