@@ -2,32 +2,20 @@
 	"manifest_version": 3,
 	"name": "Iventis Model Analysis",
 	"description": "An analysis tool to investigate performance of glb models used inside Iventis mapping applications",
-	"version": "1.0",
+	"version": "1.0.1",
 	"action": {
 		"default_popup": "index.html",
 		"default_icon": "iventis.png"
 	},
 	"content_scripts": [
 		{
-			"matches": [
-				"<all_urls>"
-			],
-			"js": [
-				"content-script.js"
-			]
+			"matches": ["<all_urls>"],
+			"js": ["content-script.js"]
 		}
 	],
 	"externally_connectable": {
-		"matches": [
-			"<all_urls>"
-		]
+		"matches": ["<all_urls>"]
 	},
-	"permissions": [
-		"activeTab",
-		"webRequest"
-	],
-	"host_permissions": [
-		"http://*/*",
-		"https://*/*"
-	]
+	"permissions": ["activeTab", "webRequest"],
+	"host_permissions": ["http://*/*", "https://*/*"]
 }

@@ -28,7 +28,7 @@ export async function getModelListener() {
 			const modelUrl = event.url.split("?");
 			const modelId = modelUrl[0].split("/").pop();
 			if (modelId != null && event.url != null) {
-				$models.next({ ...$models.value, [modelId]: event.url })
+				$models.next({ ...$models.value, [modelId]: event.url });
 			}
 		},
 		{
