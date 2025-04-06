@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "Iventis Model Analysis",
 	"description": "An analysis tool to investigate performance of glb models used inside Iventis mapping applications",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"action": {
 		"default_popup": "index.html",
 		"default_icon": "iventis.png"

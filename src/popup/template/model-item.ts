@@ -1,10 +1,9 @@
-import type { ModelConfig } from "../types/models-config";
 import { TemplateBase } from "./template-base";
 import "./model-item.css";
 
 type Events = {
-	onModelSelected: (modelName: string, modelId: string) => void
-}
+	onModelSelected: (modelName: string, modelId: string) => void;
+};
 
 export class ModelItem extends TemplateBase {
 	private readonly name: string;
@@ -15,11 +14,10 @@ export class ModelItem extends TemplateBase {
 
 	private readonly events: Events;
 
-
-	constructor(modelConfig: ModelConfig, listContainer: HTMLDivElement, events: Events) {
+	constructor(modelName: string, modelId: string, listContainer: HTMLDivElement, events: Events) {
 		super("model-item");
-		this.name = modelConfig.name;
-		this.modelId = modelConfig.assetId;
+		this.name = modelName;
+		this.modelId = modelId;
 		this.listContainer = listContainer;
 		this.events = events;
 		this.add();
@@ -32,9 +30,8 @@ export class ModelItem extends TemplateBase {
 		itemButton.id = this.elementId;
 
 		itemButton.onclick = () => {
-			this.events.onModelSelected(this.name, this.modelId)
-		}
-
+			this.events.onModelSelected(this.name, this.modelId);
+		};
 
 		this.listContainer.appendChild(itemButton);
 	}

@@ -10,6 +10,7 @@ import "./style.css";
 import { getModelListener } from "./network-listeners/model-network-listeners";
 
 let currentView: TemplateBase;
+const loadedModels: { modelName: string; modelId: string }[] = [];
 
 async function main() {
 	const iventis = await isPageIventis();
@@ -26,7 +27,6 @@ async function main() {
 		return;
 	}
 
-
 	getModelListener();
 
 	const isPageLoaded = await sendMessage(PAGE_ALREADY_LOADED);
@@ -36,7 +36,7 @@ async function main() {
 		return;
 	}
 
-	currentView = new ModelsListTemplate({ onModelSelected: showModel });
+	showModelList();
 }
 
 function showModel(modelName: string, modelId: string) {
@@ -46,7 +46,15 @@ function showModel(modelName: string, modelId: string) {
 
 function showModelList() {
 	currentView.remove();
-	currentView = new ModelsListTemplate({ onModelSelected: showModel });
+	currentView = new ModelsListTemplate(
+		{
+			onModelSelected: showModel,
+			onModelLoaded: (modelName, modelId) => {
+				loadedModels.push({ modelName, modelId });
+			},
+		},
+		loadedModels,
+	);
 }
 
 async function onDownloadClicked(modelUrl: string, modelName: string) {

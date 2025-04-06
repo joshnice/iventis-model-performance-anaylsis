@@ -2,21 +2,20 @@ import { get } from "../api/api-helpers";
 import { getModelApiUrl, getModelsConfigApiUrl } from "../api/url-helpers";
 import { onNetworkResponseCompleted } from "../extension/network";
 import { BehaviorSubject } from "rxjs";
-import type { ModelConfig, ModelConfigResponse } from "../types/models-config";
+import type { ModelConfigResponse } from "../types/models-config";
 
 let getModelsRequestResponse: chrome.webRequest.WebResponseCacheDetails;
 
-export async function getModelsConfig(): Promise<ModelConfig[]> {
+export async function getModelsConfig(onModelLoaded: (modelName: string, modelId: string) => void) {
 	const url = await getModelsConfigApiUrl();
 	if (getModelsRequestResponse == null) {
-		getModelsRequestResponse = await onNetworkResponseCompleted(url);
+		onNetworkResponseCompleted(url, async (getModelsRequestResponse) => {
+			const modelsConfig = await get<ModelConfigResponse[]>(getModelsRequestResponse.url);
+			for (const model of modelsConfig) {
+				onModelLoaded(model.name, model.lods[0].files[0].assetId);
+			}
+		});
 	}
-	const modelsConfig = await get<ModelConfigResponse[]>(getModelsRequestResponse.url);
-
-	return modelsConfig.map((modelConfig) => ({
-		assetId: modelConfig.lods[0].files[0].assetId,
-		name: modelConfig.name,
-	}));
 }
 
 export const $models = new BehaviorSubject<Record<string, string>>({});

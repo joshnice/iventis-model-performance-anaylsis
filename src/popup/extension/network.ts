@@ -1,12 +1,15 @@
-export function onNetworkResponseCompleted(url: string): Promise<chrome.webRequest.WebResponseCacheDetails> {
-	return new Promise((res) => {
-		chrome.webRequest.onCompleted.addListener(
-			(event) => {
-				res(event);
-			},
-			{
-				urls: [url],
-			},
-		);
-	});
+import { getBaseUrl } from "../api/url-helpers";
+
+export async function onNetworkResponseCompleted(url: string, callback: (url: chrome.webRequest.WebResponseCacheDetails) => void) {
+	const baseUrl = await getBaseUrl();
+	chrome.webRequest.onCompleted.addListener(
+		(event) => {
+			if (event.initiator === baseUrl) {
+				callback(event);
+			}
+		},
+		{
+			urls: [url],
+		},
+	);
 }

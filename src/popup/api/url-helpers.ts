@@ -11,15 +11,21 @@ export async function isIvenitsPageMap() {
 	return tab.url?.includes(MAP_URL);
 }
 
-export async function getApiUrl() {
+export async function getBaseUrl() {
 	const tab = await getCurrentTab();
 
 	if (tab.url == null) {
 		throw new Error("Tab url is null");
 	}
 
-	const spiltUrl = tab.url.split("spatial-planner");
-	return `${spiltUrl[0]}api/`;
+	const spiltUrl = tab.url.split("/spatial-planner");
+
+	return spiltUrl[0];
+}
+
+export async function getApiUrl() {
+	const baseUrl = await getBaseUrl();
+	return `${baseUrl}/api/`;
 }
 
 export async function getModelsConfigApiUrl() {

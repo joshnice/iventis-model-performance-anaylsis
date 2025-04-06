@@ -1,26 +1,38 @@
 import { getModelsConfig } from "../network-listeners/model-network-listeners";
 import { TemplateBase } from "./template-base";
 import { ModelItem } from "./model-item";
-import type { ModelConfig } from "../types/models-config";
 import "./models-list.css";
 
 export class ModelsListTemplate extends TemplateBase {
-
 	private container: HTMLDivElement | null = null;
 
-	private modelsConfig: ModelConfig[] = [];
+	private models: { modelName: string; modelId: string }[];
 
-	private readonly events: { onModelSelected: (modelName: string, modelId: string) => void };
+	private readonly events: {
+		onModelSelected: (modelName: string, modelId: string) => void;
+		onModelLoaded: (modelName: string, modelId: string) => void;
+	};
 
-	constructor(events: { onModelSelected: (modelName: string, modelId: string) => void }) {
+	constructor(
+		events: {
+			onModelSelected: (modelName: string, modelId: string) => void;
+			onModelLoaded: (modelName: string, modelId: string) => void;
+		},
+		loadedModels: { modelName: string; modelId: string }[],
+	) {
 		super("model-list");
 		this.events = events;
+		this.models = loadedModels;
 		this.add();
 	}
 
 	public async add() {
 		this.createContainer();
-		this.createItems();
+		if (this.models.length === 0) {
+			this.getAndAddItems();
+		} else {
+			this.addModels();
+		}
 	}
 
 	private createContainer() {
@@ -29,12 +41,20 @@ export class ModelsListTemplate extends TemplateBase {
 		this.appContainer.appendChild(this.container);
 	}
 
-	private async createItems() {
-		this.modelsConfig = await getModelsConfig();
-		this.modelsConfig.forEach((modelConfig) => {
+	private async getAndAddItems() {
+		getModelsConfig((modelName, modelId) => {
 			if (this.container) {
-				new ModelItem(modelConfig, this.container, this.events);
+				this.events.onModelLoaded(modelName, modelId);
+				new ModelItem(modelName, modelId, this.container, this.events);
 			}
 		});
+	}
+
+	private addModels() {
+		for (const model of this.models) {
+			if (this.container) {
+				new ModelItem(model.modelName, model.modelId, this.container, this.events);
+			}
+		}
 	}
 }
